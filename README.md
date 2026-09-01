@@ -115,12 +115,16 @@ npm install
 
 ### 2. 環境変数設定
 
-`.env` に最低限以下を設定してください。
+`.env.example` をコピーして `.env` を作り、値を設定してください。
 
-```env
-DATABASE_URL="file:./dev.db"
-PORT=3000
+```bash
+cp .env.example .env
 ```
+
+| 変数 | 用途 | 例 |
+| ---- | ---- | --- |
+| `DATABASE_URL` | SQLite の接続先 | `file:./dev.db` |
+| `PORT` | 待ち受けポート | `3000` |
 
 ### 3. Prisma Client 生成
 
