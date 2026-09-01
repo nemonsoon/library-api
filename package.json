@@ -6,6 +6,8 @@
 	"scripts": {
 		"dev": "tsx src/infrastructure/web/app.ts",
 		"test": "vitest run",
+		"typecheck": "tsc --noEmit",
+		"check": "biome check .",
 		"lint:fix": "biome check --write ."
 	},
 	"keywords": [],
