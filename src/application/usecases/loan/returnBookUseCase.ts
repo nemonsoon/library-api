@@ -33,10 +33,10 @@ export class ReturnBookUseCase implements ReturnBookUseCaseInterface {
 			const updatedLoan = await this.loanRepository.update(loan, ctx);
 
 			return {
-				id: loan.id,
-				returnDate: loan.returnDate,
-				createdAt: loan.createdAt,
-				updatedAt: loan.updatedAt,
+				id: updatedLoan.id,
+				returnDate: updatedLoan.returnDate,
+				createdAt: updatedLoan.createdAt,
+				updatedAt: updatedLoan.updatedAt,
 			};
 		});
 	}
