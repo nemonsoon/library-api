@@ -1,36 +1,47 @@
 # Library API
 
-Express + TypeScript + Prisma（SQLite）で構成した書籍管理APIです。
-クリーンアーキテクチャで実装されており、`src/infrastructure/web/app.ts` で依存性を組み立てています。
+書籍の登録・貸出・返却を扱う HTTP API。
+クリーンアーキテクチャで層を分離し、業務ルールをフレームワークやデータベースから独立させることを設計の軸に置いている。
 
-> 層の分離を手を動かして確かめるための学習用リポジトリで、ローカル実行のみを想定しています。
-> 認証・認可とリクエストの入力検証は実装していません。
+## 機能
 
-## 実装済み機能
-
-- ユーザー作成
-- 書籍登録
-- 書籍ID検索
-- 書籍の貸し出し
+- 利用者の作成
+- 書籍の登録
+- 書籍の取得
+- 書籍の貸出
 - 書籍の返却
 
-### ドメインルール
+### 業務ルール
 
-- 貸出中の書籍は再貸出不可
-- 返却済みの貸出履歴は再返却不可
-- 返却期限は貸出日から14日後
-- ユーザーごとの同時貸出上限は5冊
+- 貸出中の書籍は再度貸し出せない
+- 返却済みの貸出履歴は再度返却できない
+- 返却期限は貸出日の14日後
+- 同一利用者の同時貸出は5冊まで
+
+## 現在の制約
+
+ローカル実行を想定しており、本番環境への配備は行っていない。
+以下は未実装で、それぞれ [Issues](https://github.com/nemonsoon/library-api/issues) で管理している。
+
+| 未実装のもの | 影響 |
+| --- | --- |
+| 認証・認可 | 任意の利用者の識別子を指定すれば、誰でも貸出と返却ができる |
+| リクエストの入力検証 | 必須項目が欠けたリクエストが業務ロジックまで到達する |
+| 業務エラーに応じた HTTP ステータス | 書籍の未存在を除き、すべて `500` を返す |
 
 ## アーキテクチャ
 
-| レイヤ         | 役割                                           | ディレクトリ         |
-| -------------- | ---------------------------------------------- | -------------------- |
-| Domain         | エンティティ、業務ルール、抽象インターフェース | `src/domain`         |
-| Application    | ユースケース、DTO、トランザクション抽象        | `src/application`    |
-| Adapter        | Controller、Repository実装、ユーティリティ実装 | `src/adapter`        |
-| Infrastructure | Express起動、DI、ルーティング                  | `src/infrastructure` |
+依存の向きは `Infrastructure → Adapter → Application → Domain`。
+内側の層は外側の層を参照しない。
 
-依存方向は `Infrastructure -> Adapter -> Application -> Domain` です。
+| 層 | 責務 | ディレクトリ |
+| --- | --- | --- |
+| Domain | エンティティ、業務ルール、抽象インターフェース | `src/domain` |
+| Application | ユースケース、DTO、トランザクションの抽象 | `src/application` |
+| Adapter | Controller、Repository の実装、ユーティリティの実装 | `src/adapter` |
+| Infrastructure | Express の起動、依存性の組み立て、ルーティング | `src/infrastructure` |
+
+依存性の組み立ては `src/infrastructure/web/app.ts` に集約している。
 
 ### 依存方向
 
@@ -41,7 +52,7 @@ graph LR
   AP --> D[Domain]
 ```
 
-### リクエストフロー
+### リクエストの流れ
 
 ```mermaid
 sequenceDiagram
@@ -98,122 +109,110 @@ erDiagram
   USER ||--o{ LOAN : "has many"
 ```
 
+スキーマの定義は `prisma/schema.prisma` にある。
+
 ## 技術スタック
 
-- Node.js 20+
-- TypeScript（ESM）
-- Express 5
-- Prisma 7
-- SQLite（`@prisma/adapter-better-sqlite3`）
-- Vitest
-- Biome
+| 分類 | 技術 |
+| --- | --- |
+| 言語 | TypeScript（ESM） |
+| 実行環境 | Node.js 20以上 |
+| Web フレームワーク | Express 5 |
+| ORM | Prisma 7 |
+| データベース | SQLite（`@prisma/adapter-better-sqlite3`） |
+| API 仕様 | OpenAPI（`openapi.yml`） |
+| テスト | Vitest |
+| 静的検査 | Biome |
 
 ## セットアップ
 
-### 1. 依存関係インストール
-
 ```bash
+git clone https://github.com/nemonsoon/library-api.git
+cd library-api
+
 npm install
-```
 
-### 2. 環境変数設定
-
-`.env.example` をコピーして `.env` を作り、値を設定してください。
-
-```bash
 cp .env.example .env
-```
 
-| 変数 | 用途 | 例 |
-| ---- | ---- | --- |
-| `DATABASE_URL` | SQLite の接続先 | `file:./dev.db` |
-| `PORT` | 待ち受けポート | `3000` |
-
-### 3. Prisma Client 生成
-
-```bash
 npx prisma generate
-```
-
-### 4. スキーマ反映
-
-```bash
 npx prisma db push
-```
 
-### 5. 起動
-
-```bash
 npm run dev
 ```
 
-- Base URL: `http://localhost:3000`
+起動後のベース URL は `http://localhost:3000`。
 
-## API仕様
+環境変数は `.env.example` をコピーして設定する。
 
-### エンドポイント一覧
+| 変数 | 用途 | 例 |
+| --- | --- | --- |
+| `DATABASE_URL` | SQLite の接続先 | `file:./dev.db` |
+| `PORT` | 待ち受けポート | `3000` |
 
-| Method | Path            | 説明         | 主な成功レスポンス |
-| ------ | --------------- | ------------ | ------------------ |
-| POST   | `/users`        | ユーザー作成 | `201`              |
-| POST   | `/books`        | 書籍作成     | `202`              |
-| GET    | `/books/:id`    | 書籍取得     | `200`              |
-| POST   | `/loans`        | 書籍貸出     | `201`              |
-| POST   | `/loans/return` | 書籍返却     | `200`              |
+## API ドキュメント
+
+起動中のサーバーが、API 仕様を2つの形で配信する。
+
+| URL | 内容 |
+| --- | --- |
+| `http://localhost:3000/docs` | Swagger UI。ブラウザ上で各エンドポイントを試せる |
+| `http://localhost:3000/openapi.yml` | OpenAPI 仕様そのもの |
+
+仕様の原本はリポジトリ直下の [`openapi.yml`](openapi.yml)。
+
+### エンドポイント
+
+| Method | Path | 説明 | 成功時のステータス |
+| --- | --- | --- | --- |
+| POST | `/users` | 利用者の作成 | `201` |
+| POST | `/books` | 書籍の登録 | `202` |
+| GET | `/books/:id` | 書籍の取得 | `200` |
+| POST | `/loans` | 書籍の貸出 | `201` |
+| POST | `/loans/return` | 書籍の返却 | `200` |
 
 ### リクエスト例
 
-`POST /users`
+```bash
+# 利用者の作成
+curl -X POST http://localhost:3000/users \
+  -H 'Content-Type: application/json' \
+  -d '{"email":"user@example.com"}'
 
-```json
-{
-  "email": "user@example.com"
-}
+# 書籍の登録
+curl -X POST http://localhost:3000/books \
+  -H 'Content-Type: application/json' \
+  -d '{"title":"Clean Architecture"}'
+
+# 書籍の貸出
+curl -X POST http://localhost:3000/loans \
+  -H 'Content-Type: application/json' \
+  -d '{"bookId":"<書籍の識別子>","userId":"<利用者の識別子>"}'
+
+# 書籍の返却
+curl -X POST http://localhost:3000/loans/return \
+  -H 'Content-Type: application/json' \
+  -d '{"id":"<貸出の識別子>"}'
 ```
 
-`POST /books`
+### エラーレスポンス
 
-```json
-{
-  "title": "Clean Architecture"
-}
-```
+形式は `{ "error": "..." }`。
 
-`POST /loans`
+現在のステータスの割り当ては次のとおりで、業務エラーの区別は未対応。
 
-```json
-{
-  "bookId": "book-uuid",
-  "userId": "user-uuid"
-}
-```
-
-`POST /loans/return`
-
-```json
-{
-  "id": "loan-uuid"
-}
-```
-
-### エラーハンドリング（現状）
-
-- `GET /books/:id` の未存在時のみ `404` を返却
-- それ以外の業務エラー/例外は `500` を返却
-- エラーレスポンス形式: `{ "error": "..." }`
-
-## データモデル
-
-- `Book`: 書籍（`isAvailable` で貸出可否管理）
-- `User`: 利用者（`email` はユニーク）
-- `Loan`: 貸出履歴（`loanDate`, `dueDate`, `returnDate`）
-
-Prisma スキーマは `prisma/schema.prisma` を参照してください。
+- `GET /books/:id` で書籍が存在しないとき `404`
+- それ以外の業務エラーと例外は `500`
 
 ## 開発コマンド
 
 ```bash
-npm run dev      # API起動（tsx）
-npm test         # Vitest
-npm run lint:fix # Biomeで整形/静的検査
+npm run dev        # 開発サーバー起動（tsx）
+npm test           # テスト実行（Vitest）
+npm run typecheck  # 型検査（tsc --noEmit）
+npm run check      # 静的検査（Biome、書き換えなし）
+npm run lint:fix   # 静的検査と自動修正（Biome）
 ```
+
+## ライセンス
+
+[MIT](LICENSE)
