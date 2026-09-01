@@ -214,8 +214,3 @@ npm run dev      # API起動（tsx）
 npm test         # Vitest
 npm run lint:fix # Biomeで整形/静的検査
 ```
-
-## 関連ドキュメント
-
-- `docs/clean-architecture.md`
-- `docs/learning-guide.md`
