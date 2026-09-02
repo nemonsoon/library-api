@@ -16,7 +16,7 @@ export class BookController {
 				title: req.body.title,
 			};
 			const book = await this.addBookUseCase.execute(requestDto);
-			res.status(202).json(book);
+			res.status(201).json(book);
 		} catch (error) {
 			console.log(error);
 			res.status(500).json({ error: "書籍の登録に失敗しました" });

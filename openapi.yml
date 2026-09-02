@@ -49,8 +49,8 @@ paths:
             schema:
               $ref: '#/components/schemas/CreateBookRequest'
       responses:
-        '202':
-          description: Accepted
+        '201':
+          description: Created
           content:
             application/json:
               schema:

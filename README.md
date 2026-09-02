@@ -100,7 +100,7 @@ erDiagram
     string userId FK
     datetime loanDate
     datetime dueDate
-    datetime returnDate
+    datetime returnDate "null 可（未返却）"
     datetime createdAt
     datetime updatedAt
   }
@@ -165,7 +165,7 @@ npm run dev
 | Method | Path | 説明 | 成功時のステータス |
 | --- | --- | --- | --- |
 | POST | `/users` | ユーザーの作成 | `201` |
-| POST | `/books` | 書籍の登録 | `202` |
+| POST | `/books` | 書籍の登録 | `201` |
 | GET | `/books/:id` | 書籍の取得 | `200` |
 | POST | `/loans` | 書籍の貸出 | `201` |
 | POST | `/loans/return` | 書籍の返却 | `200` |
