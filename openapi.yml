@@ -95,7 +95,7 @@ paths:
   /loans:
     post:
       tags: [Loans]
-      summary: 書籍貸し出し
+      summary: 書籍貸出
       requestBody:
         required: true
         content:

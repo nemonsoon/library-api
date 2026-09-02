@@ -23,10 +23,10 @@ export class LoanBookUseCase implements LoanBookUseCaseInterface {
 				throw new Error("書籍が存在しません。");
 			}
 
-			// 2. 貸し出し処理
+			// 2. 貸出処理
 			book.loan();
 
-			// 3. ユーザーの貸し出し上限をチェック
+			// 3. ユーザーの貸出上限をチェック
 			const loans = await this.loanRepository.findByUserId(
 				requestDto.userId,
 				ctx,
@@ -38,7 +38,7 @@ export class LoanBookUseCase implements LoanBookUseCaseInterface {
 			// 4. 書籍を更新
 			await this.bookRepository.update(book, ctx);
 
-			// 5. 貸し出し履歴を作成
+			// 5. 貸出履歴を作成
 			const newLoan = new Loan(
 				this.idGenerator.generate(),
 				requestDto.bookId,
@@ -46,7 +46,7 @@ export class LoanBookUseCase implements LoanBookUseCaseInterface {
 				new Date(),
 			);
 
-			// 6. 貸し出し履歴を永続化
+			// 6. 貸出履歴を永続化
 			const createdLoan = await this.loanRepository.create(newLoan, ctx);
 
 			// 7. レスポンスDTOを返す

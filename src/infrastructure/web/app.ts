@@ -42,7 +42,7 @@ const userRepository = new PrismaUserRepository(prisma);
 const createUserUseCase = new CreateUserUseCase(userRepository, uuidGenerator);
 const userController = new UserController(createUserUseCase);
 
-// 貸し出し
+// 貸出
 const loanRepository = new PrismaLoanRepository(prisma);
 const loanBookUseCase = new LoanBookUseCase(
 	loanRepository,

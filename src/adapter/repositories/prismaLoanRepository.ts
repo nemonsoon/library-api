@@ -8,7 +8,7 @@ import type { PrismaClient } from "../../generated/prisma/client.js";
 export class PrismaLoanRepository implements LoanRepositoryInterface {
 	constructor(private readonly prisma: PrismaClient) {}
 
-	// 貸し出し履歴を作成する
+	// 貸出履歴を作成する
 	async create(loan: Loan, ctx?: TransactionContextInterface): Promise<Loan> {
 		const prisma = ctx ? (ctx as PrismaClient) : this.prisma;
 		const createdLoan = await prisma.loan.create({
@@ -35,7 +35,7 @@ export class PrismaLoanRepository implements LoanRepositoryInterface {
 		);
 	}
 
-	// 貸し出し履歴をIDで取得する
+	// 貸出履歴をIDで取得する
 	async findById(
 		id: string,
 		ctx?: TransactionContextInterface,
@@ -60,7 +60,7 @@ export class PrismaLoanRepository implements LoanRepositoryInterface {
 		);
 	}
 
-	// 貸し出し履歴をIDで取得する
+	// 貸出履歴をIDで取得する
 	async findByUserId(
 		userId: string,
 		ctx?: TransactionContextInterface,

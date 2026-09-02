@@ -19,7 +19,7 @@ export class LoanController {
 			res.status(201).json(loan);
 		} catch (error) {
 			console.log(error);
-			res.status(500).json({ error: "書籍の貸し出しに失敗しました" });
+			res.status(500).json({ error: "書籍の貸出に失敗しました" });
 		}
 	}
 
