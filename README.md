@@ -5,7 +5,7 @@
 
 ## 機能
 
-- 利用者の作成
+- ユーザーの作成
 - 書籍の登録
 - 書籍の取得
 - 書籍の貸出
@@ -16,7 +16,7 @@
 - 貸出中の書籍は再度貸し出せない
 - 返却済みの貸出履歴は再度返却できない
 - 返却期限は貸出日の14日後
-- 同一利用者の同時貸出は5冊まで
+- 同一ユーザーの同時貸出は5冊まで
 
 ## 現在の制約
 
@@ -25,7 +25,7 @@
 
 | 未実装のもの | 影響 |
 | --- | --- |
-| 認証・認可 | 任意の利用者の識別子を指定すれば、誰でも貸出と返却ができる |
+| 認証・認可 | 任意のユーザーの識別子を指定すれば、誰でも貸出と返却ができる |
 | リクエストの入力検証 | 必須項目が欠けたリクエストが業務ロジックまで到達する |
 | 業務エラーに応じた HTTP ステータス | 書籍の未存在を除き、すべて `500` を返す |
 
@@ -116,7 +116,7 @@ erDiagram
 | 分類 | 技術 |
 | --- | --- |
 | 言語 | TypeScript（ESM） |
-| 実行環境 | Node.js 20以上 |
+| 実行環境 | Node.js 24（`mise.toml` で固定） |
 | Web フレームワーク | Express 5 |
 | ORM | Prisma 7 |
 | データベース | SQLite（`@prisma/adapter-better-sqlite3`） |
@@ -164,7 +164,7 @@ npm run dev
 
 | Method | Path | 説明 | 成功時のステータス |
 | --- | --- | --- | --- |
-| POST | `/users` | 利用者の作成 | `201` |
+| POST | `/users` | ユーザーの作成 | `201` |
 | POST | `/books` | 書籍の登録 | `202` |
 | GET | `/books/:id` | 書籍の取得 | `200` |
 | POST | `/loans` | 書籍の貸出 | `201` |
@@ -173,7 +173,7 @@ npm run dev
 ### リクエスト例
 
 ```bash
-# 利用者の作成
+# ユーザーの作成
 curl -X POST http://localhost:3000/users \
   -H 'Content-Type: application/json' \
   -d '{"email":"user@example.com"}'
@@ -186,7 +186,7 @@ curl -X POST http://localhost:3000/books \
 # 書籍の貸出
 curl -X POST http://localhost:3000/loans \
   -H 'Content-Type: application/json' \
-  -d '{"bookId":"<書籍の識別子>","userId":"<利用者の識別子>"}'
+  -d '{"bookId":"<書籍の識別子>","userId":"<ユーザーの識別子>"}'
 
 # 書籍の返却
 curl -X POST http://localhost:3000/loans/return \
