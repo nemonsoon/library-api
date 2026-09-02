@@ -32,9 +32,15 @@ export class ReturnBookUseCase implements ReturnBookUseCaseInterface {
 			loan.return();
 			const updatedLoan = await this.loanRepository.update(loan, ctx);
 
+			// 返却直後の貸出には必ず返却日が入る。型を Date に保つために取り出して確かめる
+			const { returnDate } = updatedLoan;
+			if (!returnDate) {
+				throw new Error("返却日が保存されていません。");
+			}
+
 			return {
 				id: updatedLoan.id,
-				returnDate: updatedLoan.returnDate,
+				returnDate,
 				createdAt: updatedLoan.createdAt,
 				updatedAt: updatedLoan.updatedAt,
 			};

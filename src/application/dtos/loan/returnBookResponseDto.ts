@@ -1,6 +1,6 @@
 export interface ReturnBookResponseDto {
 	id: string;
-	returnDate: Date | null;
+	returnDate: Date;
 	createdAt: Date;
 	updatedAt: Date;
 }
