@@ -31,7 +31,7 @@ const prisma = new PrismaClient({ adapter });
 const uuidGenerator = new UuidGenerator();
 const transactionManager = new PrismaTransactionManager(prisma);
 
-// 本
+// 書籍
 const bookRepository = new PrismaBookRepository(prisma);
 const addBookUseCase = new AddBookUseCase(bookRepository, uuidGenerator);
 const findBookByIdUseCase = new FindBookByIdUseCase(bookRepository);

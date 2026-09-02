@@ -32,7 +32,7 @@ export class LoanBookUseCase implements LoanBookUseCaseInterface {
 				ctx,
 			);
 			if (loans.filter((loan) => loan.returnDate === null).length >= 5) {
-				throw new Error("既に上限まで貸し出されています。");
+				throw new Error("すでに貸出上限に達しています。");
 			}
 
 			// 4. 書籍を更新

@@ -6,7 +6,7 @@ import type { PrismaClient } from "../../generated/prisma/client.js";
 export class PrismaBookRepository implements BookRepositoryInterface {
 	constructor(private readonly prisma: PrismaClient) {}
 
-	// 本を作成する
+	// 書籍を作成する
 	async create(book: Book, ctx?: TransactionContextInterface): Promise<Book> {
 		const prisma = ctx ? (ctx as PrismaClient) : this.prisma;
 		const createdBook = await prisma.book.create({
@@ -28,7 +28,7 @@ export class PrismaBookRepository implements BookRepositoryInterface {
 		);
 	}
 
-	// 本をIDで取得する
+	// 書籍をIDで取得する
 	async findById(
 		id: string,
 		ctx?: TransactionContextInterface,
