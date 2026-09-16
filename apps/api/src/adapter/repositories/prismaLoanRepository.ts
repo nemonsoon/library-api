@@ -84,6 +84,27 @@ export class PrismaLoanRepository implements LoanRepositoryInterface {
 		);
 	}
 
+	// 指定した書籍の未返却の貸出を、貸出日の新しい順に取得する
+	async findActiveByBookIds(bookIds: string[]): Promise<Loan[]> {
+		const foundLoans = await this.prisma.loan.findMany({
+			where: { bookId: { in: bookIds }, returnDate: null },
+			orderBy: { loanDate: "desc" },
+		});
+
+		return foundLoans.map(
+			(foundLoan) =>
+				new Loan(
+					foundLoan.id,
+					foundLoan.bookId,
+					foundLoan.userId,
+					foundLoan.loanDate,
+					foundLoan.returnDate,
+					foundLoan.createdAt,
+					foundLoan.updatedAt,
+				),
+		);
+	}
+
 	async update(loan: Loan, ctx?: TransactionContextInterface): Promise<Loan> {
 		const prisma = ctx ? (ctx as PrismaClient) : this.prisma;
 		const updatedLoan = await prisma.loan.update({

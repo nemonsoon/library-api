@@ -3,23 +3,37 @@ import type { AddBookRequestDto } from "../../application/dtos/book/addBookReque
 import type { FindBookByIdRequestDto } from "../../application/dtos/book/findBookByIdRequestDto.js";
 import type { AddBookUseCaseInterface } from "../../application/usecases/book/addBookUseCaseInterface.js";
 import type { FindBookByIdUseCaseInterface } from "../../application/usecases/book/findBookByIdUseCaseInterface.js";
+import type { ListBooksUseCaseInterface } from "../../application/usecases/book/listBooksUseCaseInterface.js";
+import { parseRequestBody } from "../validation/parseRequestBody.js";
+import { addBookBodySchema } from "../validation/requestSchemas.js";
+import { sendErrorResponse } from "./errorResponse.js";
 
 export class BookController {
 	constructor(
 		private readonly addBookUseCase: AddBookUseCaseInterface,
 		private readonly findBookByIdUseCase: FindBookByIdUseCaseInterface,
+		private readonly listBooksUseCase: ListBooksUseCaseInterface,
 	) {}
 
 	async add(req: Request, res: Response): Promise<void> {
 		try {
-			const requestDto: AddBookRequestDto = {
-				title: req.body.title,
-			};
+			const requestDto: AddBookRequestDto = parseRequestBody(
+				addBookBodySchema,
+				req.body,
+			);
 			const book = await this.addBookUseCase.execute(requestDto);
 			res.status(201).json(book);
 		} catch (error) {
-			console.log(error);
-			res.status(500).json({ error: "書籍の登録に失敗しました" });
+			sendErrorResponse(res, error, "書籍の登録に失敗しました");
+		}
+	}
+
+	async list(_req: Request, res: Response): Promise<void> {
+		try {
+			const books = await this.listBooksUseCase.execute();
+			res.status(200).json(books);
+		} catch (error) {
+			sendErrorResponse(res, error, "蔵書の取得に失敗しました");
 		}
 	}
 
@@ -35,8 +49,7 @@ export class BookController {
 				res.status(404).json({ error: "書籍が見つかりませんでした" });
 			}
 		} catch (error) {
-			console.log(error);
-			res.status(500).json({ error: "書籍の検索に失敗しました" });
+			sendErrorResponse(res, error, "書籍の検索に失敗しました");
 		}
 	}
 }

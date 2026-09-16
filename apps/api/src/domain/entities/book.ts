@@ -1,3 +1,6 @@
+import { BookAlreadyLoanedError } from "../errors/bookAlreadyLoanedError.js";
+import { BookNotLoanedError } from "../errors/bookNotLoanedError.js";
+
 export class Book {
 	constructor(
 		private _id: string,
@@ -29,14 +32,14 @@ export class Book {
 
 	loan() {
 		if (!this.isAvailable) {
-			throw new Error("この書籍は既に貸出中です。");
+			throw new BookAlreadyLoanedError();
 		}
 		this._isAvailable = false;
 	}
 
 	return() {
 		if (this.isAvailable) {
-			throw new Error("この書籍は既に返却されています。");
+			throw new BookNotLoanedError();
 		}
 		this._isAvailable = true;
 	}

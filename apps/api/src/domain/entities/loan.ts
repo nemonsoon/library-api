@@ -1,3 +1,5 @@
+import { LoanAlreadyReturnedError } from "../errors/loanAlreadyReturnedError.js";
+
 // 「貸出」の業務ルール
 export class Loan {
 	constructor(
@@ -39,7 +41,7 @@ export class Loan {
 	}
 
 	return() {
-		if (this.returnDate) throw new Error("この貸出は既に返却されています。");
+		if (this.returnDate) throw new LoanAlreadyReturnedError();
 		this._returnDate = new Date();
 	}
 

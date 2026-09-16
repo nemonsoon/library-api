@@ -13,9 +13,11 @@ import { PrismaTransactionManager } from "../../adapter/utils/prismaTransactionM
 import { UuidGenerator } from "../../adapter/utils/uuidGenerator.js";
 import { AddBookUseCase } from "../../application/usecases/book/addBookUseCase.js";
 import { FindBookByIdUseCase } from "../../application/usecases/book/findBookByIdUseCase.js";
+import { ListBooksUseCase } from "../../application/usecases/book/listBooksUseCase.js";
 import { LoanBookUseCase } from "../../application/usecases/loan/loanBookUseCase.js";
 import { ReturnBookUseCase } from "../../application/usecases/loan/returnBookUseCase.js";
 import { CreateUserUseCase } from "../../application/usecases/user/createUserUseCase.js";
+import { ListUsersUseCase } from "../../application/usecases/user/listUsersUseCase.js";
 import { PrismaClient } from "../../generated/prisma/client.js";
 import { bookRoutes } from "./routers/bookRouter.js";
 import { loanRoutes } from "./routers/loanRouter.js";
@@ -31,22 +33,35 @@ const prisma = new PrismaClient({ adapter });
 const uuidGenerator = new UuidGenerator();
 const transactionManager = new PrismaTransactionManager(prisma);
 
-// 書籍
+// 永続化の実装は、どのユースケースからも使えるよう先に組み立てる
 const bookRepository = new PrismaBookRepository(prisma);
+const userRepository = new PrismaUserRepository(prisma);
+const loanRepository = new PrismaLoanRepository(prisma);
+
+// 書籍
 const addBookUseCase = new AddBookUseCase(bookRepository, uuidGenerator);
 const findBookByIdUseCase = new FindBookByIdUseCase(bookRepository);
-const bookController = new BookController(addBookUseCase, findBookByIdUseCase);
+const listBooksUseCase = new ListBooksUseCase(
+	bookRepository,
+	loanRepository,
+	userRepository,
+);
+const bookController = new BookController(
+	addBookUseCase,
+	findBookByIdUseCase,
+	listBooksUseCase,
+);
 
 // ユーザー
-const userRepository = new PrismaUserRepository(prisma);
 const createUserUseCase = new CreateUserUseCase(userRepository, uuidGenerator);
-const userController = new UserController(createUserUseCase);
+const listUsersUseCase = new ListUsersUseCase(userRepository);
+const userController = new UserController(createUserUseCase, listUsersUseCase);
 
 // 貸出
-const loanRepository = new PrismaLoanRepository(prisma);
 const loanBookUseCase = new LoanBookUseCase(
 	loanRepository,
 	bookRepository,
+	userRepository,
 	uuidGenerator,
 	transactionManager,
 );

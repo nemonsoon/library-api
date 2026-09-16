@@ -4,5 +4,6 @@ import type { TransactionContextInterface } from "../utils/transactionContextInt
 export interface BookRepositoryInterface {
 	create(book: Book, ctx?: TransactionContextInterface): Promise<Book>;
 	findById(id: string, ctx?: TransactionContextInterface): Promise<Book | null>;
+	findAll(): Promise<Book[]>;
 	update(book: Book, ctx?: TransactionContextInterface): Promise<Book>;
 }

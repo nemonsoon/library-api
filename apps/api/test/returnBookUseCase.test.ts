@@ -34,6 +34,7 @@ function createLoanRepository(): LoanRepositoryInterface {
 		create: async (loan) => loan,
 		findById: async () => createLoan(),
 		findByUserId: async () => [],
+		findActiveByBookIds: async () => [],
 		update: async (loan) =>
 			new Loan(
 				loan.id,
@@ -51,6 +52,7 @@ function createBookRepository(): BookRepositoryInterface {
 	return {
 		create: async (book) => book,
 		findById: async () => new Book("book-1", "Clean Architecture", false),
+		findAll: async () => [],
 		update: async (book) => book,
 	};
 }

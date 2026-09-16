@@ -8,5 +8,7 @@ export interface LoanRepositoryInterface {
 		userId: string,
 		ctx?: TransactionContextInterface,
 	): Promise<Loan[]>;
+	// 未返却の貸出だけを、貸出日の新しい順に返す
+	findActiveByBookIds(bookIds: string[]): Promise<Loan[]>;
 	update(loan: Loan, ctx?: TransactionContextInterface): Promise<Loan>;
 }

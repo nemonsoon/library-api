@@ -51,6 +51,24 @@ export class PrismaBookRepository implements BookRepositoryInterface {
 		);
 	}
 
+	// 蔵書をすべて取得する
+	async findAll(): Promise<Book[]> {
+		const foundBooks = await this.prisma.book.findMany({
+			orderBy: { createdAt: "desc" },
+		});
+
+		return foundBooks.map(
+			(foundBook) =>
+				new Book(
+					foundBook.id,
+					foundBook.title,
+					foundBook.isAvailable,
+					foundBook.createdAt,
+					foundBook.updatedAt,
+				),
+		);
+	}
+
 	async update(book: Book, ctx?: TransactionContextInterface): Promise<Book> {
 		const prisma = ctx ? (ctx as PrismaClient) : this.prisma;
 		const updatedBook = await prisma.book.update({

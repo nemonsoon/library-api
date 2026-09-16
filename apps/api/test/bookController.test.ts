@@ -4,6 +4,7 @@ import { BookController } from "../src/adapter/controllers/bookController.js";
 import type { AddBookResponseDto } from "../src/application/dtos/book/addBookResponseDto.js";
 import type { AddBookUseCaseInterface } from "../src/application/usecases/book/addBookUseCaseInterface.js";
 import type { FindBookByIdUseCaseInterface } from "../src/application/usecases/book/findBookByIdUseCaseInterface.js";
+import type { ListBooksUseCaseInterface } from "../src/application/usecases/book/listBooksUseCaseInterface.js";
 
 const CREATED_AT = new Date("2026-01-01T00:00:00.000Z");
 
@@ -22,6 +23,10 @@ const addBookUseCase: AddBookUseCaseInterface = {
 
 const findBookByIdUseCase: FindBookByIdUseCaseInterface = {
 	execute: async () => null,
+};
+
+const listBooksUseCase: ListBooksUseCaseInterface = {
+	execute: async () => [],
 };
 
 type ResponseSpy = {
@@ -55,7 +60,11 @@ function createRequest(body: Record<string, unknown>): Request {
 
 describe("BookController", () => {
 	it("書籍の登録は 201 と作成した書籍を返す", async () => {
-		const controller = new BookController(addBookUseCase, findBookByIdUseCase);
+		const controller = new BookController(
+			addBookUseCase,
+			findBookByIdUseCase,
+			listBooksUseCase,
+		);
 		const spy = createResponseSpy();
 
 		await controller.add(
@@ -68,7 +77,11 @@ describe("BookController", () => {
 	});
 
 	it("存在しない書籍の取得は 404 を返す", async () => {
-		const controller = new BookController(addBookUseCase, findBookByIdUseCase);
+		const controller = new BookController(
+			addBookUseCase,
+			findBookByIdUseCase,
+			listBooksUseCase,
+		);
 		const spy = createResponseSpy();
 
 		await controller.findById(

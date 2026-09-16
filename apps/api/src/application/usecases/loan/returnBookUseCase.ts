@@ -2,6 +2,8 @@ import type { BookRepositoryInterface } from "../../../domain/repositories/bookR
 import type { LoanRepositoryInterface } from "../../../domain/repositories/loanRepositoryInterface.js";
 import type { ReturnBookRequestDto } from "../../dtos/loan/returnBookRequestDto.js";
 import type { ReturnBookResponseDto } from "../../dtos/loan/returnBookResponseDto.js";
+import { BookNotFoundError } from "../../errors/bookNotFoundError.js";
+import { LoanNotFoundError } from "../../errors/loanNotFoundError.js";
 import type { TransactionManagerInterface } from "../../utils/transactionManagerInterface.js";
 import type { ReturnBookUseCaseInterface } from "./returnBookUseCaseInterface.js";
 
@@ -18,12 +20,12 @@ export class ReturnBookUseCase implements ReturnBookUseCaseInterface {
 		return await this.transactionManager.run(async (ctx) => {
 			const loan = await this.loanRepository.findById(requestDto.id, ctx);
 			if (!loan) {
-				throw new Error("貸出履歴が存在しません。");
+				throw new LoanNotFoundError();
 			}
 			const book = await this.bookRepository.findById(loan.bookId, ctx);
 
 			if (!book) {
-				throw new Error("書籍が存在しません。");
+				throw new BookNotFoundError();
 			}
 			book.return();
 
