@@ -2,7 +2,7 @@ node_modules
 
 .vscode
 
-/src/generated/prisma
+/apps/api/src/generated/prisma
 
 *.db
 *.db-journal

@@ -1,0 +1,356 @@
+openapi: 3.0.3
+info:
+  title: Library API
+  version: 1.0.0
+  description: >
+    蔵書管理 API。Express + TypeScript + Prisma で構成。
+    日時はすべて ISO 8601 の協定世界時で返す。
+    一覧はローカル実行の規模を前提としており、絞り込みも件数の上限も持たない。
+servers:
+  - url: http://localhost:3000
+    description: local
+
+tags:
+  - name: Users
+  - name: Books
+  - name: Loans
+
+paths:
+  /users:
+    get:
+      tags: [Users]
+      summary: ユーザー一覧
+      description: 登録済みのユーザーを作成日の古い順に返す。
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      tags: [Users]
+      summary: ユーザー作成
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /books:
+    get:
+      tags: [Books]
+      summary: 蔵書一覧
+      description: >
+        蔵書を登録日の新しい順に返す。
+        貸出中の書籍には、返却されていない貸出を currentLoan として添える。
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BookWithLoan'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      tags: [Books]
+      summary: 書籍作成
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBookRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /books/{id}:
+    get:
+      tags: [Books]
+      summary: 書籍ID検索
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /loans:
+    post:
+      tags: [Loans]
+      summary: 書籍貸出
+      description: 返却期限は貸出日の14日後に設定される。
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLoanRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Loan'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          description: >
+            業務ルールに反する。書籍が既に貸出中であるか、
+            ユーザーの同時貸出が上限の5冊に達している。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /loans/return:
+    post:
+      tags: [Loans]
+      summary: 書籍返却
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReturnLoanRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReturnLoanResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          description: 業務ルールに反する。貸出が既に返却されている。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  responses:
+    BadRequest:
+      description: リクエストの形が仕様と違う。必須項目の欠落か型違い。
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+    NotFound:
+      description: 指定された対象が存在しない。
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+    InternalServerError:
+      description: 想定していない例外。
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+  schemas:
+    ErrorResponse:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string
+
+    CreateUserRequest:
+      type: object
+      required: [email]
+      properties:
+        email:
+          type: string
+          format: email
+          example: user@example.com
+
+    CreateBookRequest:
+      type: object
+      required: [title]
+      properties:
+        title:
+          type: string
+          minLength: 1
+          example: Clean Architecture
+
+    CreateLoanRequest:
+      type: object
+      required: [bookId, userId]
+      properties:
+        bookId:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+
+    ReturnLoanRequest:
+      type: object
+      required: [id]
+      properties:
+        id:
+          type: string
+          format: uuid
+
+    User:
+      type: object
+      required: [id, email, createdAt, updatedAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    Book:
+      type: object
+      required: [id, title, isAvailable, createdAt, updatedAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        isAvailable:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    BookWithLoan:
+      allOf:
+        - $ref: '#/components/schemas/Book'
+        - type: object
+          required: [currentLoan]
+          properties:
+            currentLoan:
+              allOf:
+                - $ref: '#/components/schemas/CurrentLoan'
+              nullable: true
+              description: 返却されていない貸出。貸出可の書籍では null。
+
+    CurrentLoan:
+      type: object
+      required: [id, userId, userEmail, loanDate, dueDate]
+      properties:
+        id:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        userEmail:
+          type: string
+          format: email
+        loanDate:
+          type: string
+          format: date-time
+        dueDate:
+          type: string
+          format: date-time
+
+    Loan:
+      type: object
+      required: [id, bookId, userId, loanDate, dueDate, createdAt, updatedAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        bookId:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        loanDate:
+          type: string
+          format: date-time
+        dueDate:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    ReturnLoanResponse:
+      type: object
+      required: [id, returnDate, createdAt, updatedAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        returnDate:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
