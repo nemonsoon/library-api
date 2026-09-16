@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 import express from "express";
 import swaggerUi from "swagger-ui-express";
@@ -61,8 +61,13 @@ const loanController = new LoanController(loanBookUseCase, returnBookUseCase);
 app.use("/users", userRoutes(userController));
 app.use("/books", bookRoutes(bookController));
 app.use("/loans", loanRoutes(loanController));
+// 起動時の作業ディレクトリに依存しないよう、このファイルからの相対で解決する
+const openapiPath = fileURLToPath(
+	new URL("../../../openapi.yml", import.meta.url),
+);
+
 app.get("/openapi.yml", (_req, res) => {
-	res.sendFile(resolve(process.cwd(), "openapi.yml"));
+	res.sendFile(openapiPath);
 });
 app.use(
 	"/docs",
