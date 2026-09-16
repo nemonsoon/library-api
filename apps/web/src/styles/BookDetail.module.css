@@ -1,0 +1,7 @@
+.rowLabel {
+	white-space: nowrap;
+}
+
+.identifier {
+	word-break: break-all;
+}

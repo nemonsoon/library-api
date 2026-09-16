@@ -1,0 +1,55 @@
+.shell {
+	display: flex;
+	flex-direction: column;
+	min-height: 100dvh;
+}
+
+.topbar {
+	position: sticky;
+	top: 0;
+	z-index: 100;
+	height: var(--app-topbar-height);
+	flex: none;
+	background-color: var(--mantine-color-body);
+	border-bottom: 1px solid var(--mantine-color-gray-3);
+}
+
+.topbarInner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--mantine-spacing-md);
+	height: 100%;
+	max-width: var(--app-content-max);
+	margin: 0 auto;
+	padding: 0 var(--app-gutter);
+}
+
+.body {
+	flex: 1;
+	padding: var(--mantine-spacing-xl) var(--app-gutter);
+}
+
+.content {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) var(--app-aside-width);
+	align-items: start;
+	gap: var(--app-column-gap);
+	max-width: var(--app-content-max);
+	margin: 0 auto;
+}
+
+.aside {
+	position: sticky;
+	top: calc(var(--app-topbar-height) + var(--mantine-spacing-xl));
+}
+
+@media (max-width: 62em) {
+	.content {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.aside {
+		position: static;
+	}
+}
