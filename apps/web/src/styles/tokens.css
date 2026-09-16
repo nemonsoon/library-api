@@ -1,0 +1,27 @@
+/*
+ * 画面の骨格だけをここに集める。
+ * 色・文字の大きさ・太さ・行間・角丸は Mantine の既定をそのまま使うので置かない。
+ * 対応する目盛りが Mantine に無い寸法（トップバーの高さ、詳細列の幅、列の間隔）だけを持つ。
+ * 幅の境目は Mantine の目盛りに合わせる（xs 36em / sm 48em / md 62em / lg 75em / xl 88em）。
+ */
+:root {
+	--app-topbar-height: 56px;
+	--app-aside-width: 320px;
+	--app-content-max: 1200px;
+	--app-gutter: 40px;
+	--app-column-gap: 40px;
+	--app-icon-gap: 6px;
+}
+
+@media (max-width: 62em) {
+	:root {
+		--app-gutter: 24px;
+		--app-column-gap: 24px;
+	}
+}
+
+@media (max-width: 36em) {
+	:root {
+		--app-gutter: 16px;
+	}
+}

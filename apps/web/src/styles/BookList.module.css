@@ -1,0 +1,21 @@
+.titleCell {
+	max-width: 22rem;
+}
+
+.statusCell {
+	width: 7rem;
+	white-space: nowrap;
+}
+
+.selectedRow {
+	background-color: var(--mantine-color-blue-0);
+}
+
+.rowLink {
+	color: inherit;
+	text-decoration: none;
+}
+
+.rowLink:hover {
+	text-decoration: underline;
+}

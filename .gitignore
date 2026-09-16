@@ -18,6 +18,10 @@ coverage/
 
 .DS_Store
 
-AGENTS.md
-CLAUDE.md
-docs/
+/AGENTS.md
+/CLAUDE.md
+/.claude/
+
+# 個人的な内容を含むため公開しない
+/docs/learning-guide.md
+/docs/handoff.md
