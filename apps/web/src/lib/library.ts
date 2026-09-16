@@ -67,12 +67,13 @@ function isUser(value: unknown): value is User {
 }
 
 // API は失敗の理由を { error: string } で返す。読めない形で返ってきたときだけ状態番号で補う。
+// 転送先が起動していないと、開発サーバーが本文なしの 500 を返すので、そこもここで受ける。
 function messageOf(body: unknown, status: number): string {
 	if (isRecord(body) && typeof body.error === "string" && body.error !== "") {
 		return body.error;
 	}
 	if (status >= 500) {
-		return "API の内部で問題が起きた。";
+		return "API から応答を受け取れなかった。起動しているかを確かめる。";
 	}
 	return `要求が受け付けられなかった。(${status})`;
 }
