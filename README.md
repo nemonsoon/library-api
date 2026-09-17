@@ -1,7 +1,7 @@
 # Library API
 
 本の登録、貸出、返却を扱う HTTP API と、貸出状況を一覧するウェブ画面。
-クリーンアーキテクチャで層を分離し、業務ルールをフレームワークやデータベースから独立させることを設計の軸に置いている。
+業務ルールを Express と Prisma から切り離すため、クリーンアーキテクチャで4つの層に分けている。
 
 ![上段に貸出中の本を返却期限の近い順に並べ、その下に本の一覧と登録欄を表示した画面](docs/images/screenshot.png)
 
@@ -9,8 +9,6 @@
 
 画面は1枚で、上段が返却予定、その下が左に本の一覧、右に詳細の列という構成になっている。
 返却予定は貸出中の本を返却期限の近い順に並べ、期限までの日数と貸出期間の進み具合を出す。
-一覧は登録日の新しい順に並び、桁の見出しが並び順と一致する。
-行を選ぶと、右の列が登録の窓口からその本の詳細に切り替わり、貸出と返却の窓口が出る。
 
 | 操作 | 画面 | API |
 | --- | --- | --- |
@@ -22,7 +20,21 @@
 | ユーザーの一覧 | | `GET /users` |
 | ユーザーの作成 | | `POST /users` |
 
-返却期限を過ぎているかどうかは、返却期限と現在時刻から画面側で判定する。
+画面に出ている値の意味は [画面](docs/screen.md) にある。
+
+### 本の状態
+
+```mermaid
+stateDiagram-v2
+    [*] --> 貸出可: 本を登録する
+    貸出可 --> 貸出中: 貸し出す
+    貸出中 --> 貸出可: 返してもらう
+    貸出中 --> 期限超過: 返却期限を過ぎる
+    期限超過 --> 貸出可: 返してもらう
+```
+
+期限超過は、返却期限と現在時刻から画面側で判定する。
+保存されている状態としては、貸出中と変わらない。
 
 ### 業務ルール
 
@@ -33,47 +45,45 @@
 
 ## 設計
 
-依存の向きは `Infrastructure → Adapter → Application → Domain`。
-内側の層は外側の層を参照しない。
+API と画面は別のプロセスで動く。
+画面からの要求はすべて `/api` の下に出し、開発中は画面の開発サーバーが API へ転送する。
 
-| 層 | 責務 | ディレクトリ |
-| --- | --- | --- |
-| Domain | エンティティ、業務ルール、抽象インターフェース | `apps/api/src/domain` |
-| Application | ユースケース、DTO、トランザクションの抽象 | `apps/api/src/application` |
-| Adapter | Controller、Repository の実装、入力検証 | `apps/api/src/adapter` |
-| Infrastructure | Express の起動、依存性の組み立て、ルーティング | `apps/api/src/infrastructure` |
+```mermaid
+flowchart LR
+    browser["ブラウザ"] --> web["画面<br/>React + Vite<br/>:5173"]
+    web -->|"開発中は /api を剥がして転送"| api["API<br/>Express<br/>:3000"]
+    api --> db[("SQLite<br/>apps/api/dev.db")]
+```
 
-依存性の組み立ては `apps/api/src/infrastructure/web/app.ts` に集約している。
+扱う実体は3つで、貸出が本とユーザーを結ぶ。
 
-失敗の理由は層ごとに置き場所が分かれ、それがそのまま状態番号になる。
-要求の形の誤りが `400`、対象が無いことが `404`、業務ルールに反する操作が `409` である。
-`404` と `409` の本文には理由がそのまま入るため、呼び出し側は再試行すべきかを判断できる。
+```mermaid
+erDiagram
+    本 ||--o{ 貸出 : "貸し出される"
+    ユーザー ||--o{ 貸出 : "借りる"
+```
 
-画面の色は意味ごとに4組だけ持ち、藍が貸出中、朱が返却期限の超過、緑が返却、墨が文字と貸出可を表す。
-書体も役割で分け、本の題名を明朝、ラベルとボタンをゴシック、日数と日付を等幅で組む。
-色と書体以外の目盛りは Mantine 9 の変数をそのまま使う。
-
-層ごとの責務と要求の流れは [`docs/clean-architecture.md`](docs/clean-architecture.md)、
-採った案と退けた案は [`docs/design-decisions.md`](docs/design-decisions.md) にある。
+依存の向きは `Infrastructure → Adapter → Application → Domain` で、内側の層は外側の層を参照しない。
+層ごとの責務と要求の流れは [アーキテクチャ](docs/clean-architecture.md)、採った案と退けた案は [設計判断](docs/design-decisions.md) にある。
 
 ## 技術スタック
 
 | 分類 | 技術 |
 | --- | --- |
-| 言語 | TypeScript（ESM） |
+| 言語 | TypeScript 7（ESM） |
 | 実行環境 | Node.js 24（`mise.toml` で固定） |
 | パッケージ管理 | npm ワークスペース |
-| Web フレームワーク | Express 5 |
-| ORM | Prisma 7 |
-| データベース | SQLite（`@prisma/adapter-better-sqlite3`） |
-| 入力検証 | Zod 4 |
-| API 仕様 | OpenAPI（`apps/api/openapi.yml`） |
-| 画面 | React 19、Vite 8、TanStack Router |
-| 画面の部品 | Mantine 9、Lucide |
+| Web フレームワーク | Express 5.2 |
+| ORM | Prisma 7.10 |
+| データベース | SQLite（`better-sqlite3` 12.6） |
+| 入力検証 | Zod 4.6 |
+| API 仕様 | OpenAPI 3.0.3 |
+| 画面 | React 19.3、Vite 8.3、TanStack Router 1.170 |
+| 画面の部品 | Mantine 9.6、Lucide 1.46 |
 | 書体 | Zen Old Mincho、Noto Sans JP、IBM Plex Mono |
-| 初期データ | Faker |
-| テスト | Vitest |
-| 静的検査 | Biome |
+| 初期データ | Faker 10.6 |
+| テスト | Vitest 5.0 |
+| 静的検査 | Biome 2.5 |
 
 ## セットアップ
 
@@ -89,23 +99,15 @@ npm run db:push
 npm run db:seed
 ```
 
-`npm run db:seed` は本40件、ユーザー10件、貸出13件を投入する。
-貸出のうち3件は返却期限を過ぎており、3件は返却済みである。
-
-API と画面は別のプロセスで動く。
-画面は API を呼ぶので、API を先に起動する。
+API を先に起動し、別の端末で画面を起動する。
 
 ```bash
 npm run dev:api    # http://localhost:3000
-```
-
-別の端末で画面を起動する。
-
-```bash
 npm run dev:web    # http://localhost:5173
 ```
 
 `http://localhost:5173` を開くと、上の写真の画面になる。
+初期データの内訳と、日々の検査の走らせ方は [開発](docs/development.md) にある。
 
 ## API 仕様
 
@@ -117,10 +119,6 @@ npm run dev:web    # http://localhost:5173
 | `http://localhost:3000/openapi.yml` | OpenAPI 仕様そのもの |
 
 仕様の原本は [`apps/api/openapi.yml`](apps/api/openapi.yml)。
-
-`GET /books` は各本に `currentLoan` を添える。
-返却されていない貸出があれば借り主と貸出日と返却期限が入り、無ければ `null` になる。
-詳細を表示する呼び出し側が、本ごとに追加の取得をしなくて済む。
 
 ## 現在の制約
 
@@ -138,6 +136,7 @@ npm run dev:web    # http://localhost:5173
 
 | 文書 | いつ読むか |
 | --- | --- |
+| [画面](docs/screen.md) | 画面に出ている値の意味を確かめるとき |
 | [アーキテクチャ](docs/clean-architecture.md) | 層の責務と依存の向きを確かめるとき |
 | [設計判断](docs/design-decisions.md) | 「なぜそうなっていないか」を知りたいとき |
 | [開発](docs/development.md) | 手元で動かし、変更を検査するとき |
