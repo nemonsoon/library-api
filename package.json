@@ -20,6 +20,6 @@
 		"db:seed": "npm run db:seed --workspace api"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.4.2"
+		"@biomejs/biome": "2.5.14"
 	}
 }
