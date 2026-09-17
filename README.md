@@ -70,7 +70,7 @@
 | API 仕様 | OpenAPI（`apps/api/openapi.yml`） |
 | 画面 | React 19、Vite 8、TanStack Router |
 | 画面の部品 | Mantine 9、Lucide |
-| 書体 | Zen Old Mincho、Zen Kaku Gothic New、IBM Plex Mono |
+| 書体 | Zen Old Mincho、Noto Sans JP、IBM Plex Mono |
 | 初期データ | Faker |
 | テスト | Vitest |
 | 静的検査 | Biome |

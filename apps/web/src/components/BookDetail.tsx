@@ -8,7 +8,7 @@ import {
 	Text,
 } from "@mantine/core";
 import { Link } from "@tanstack/react-router";
-import { BookDown, BookUp, CalendarX, X } from "lucide-react";
+import { BookDown, BookOpen, BookUp, CalendarX, X } from "lucide-react";
 import type { ReactNode } from "react";
 import { useState } from "react";
 import { ICON_SIZE, ICON_STROKE } from "../constants";
@@ -63,9 +63,17 @@ export function BookDetail({ book, users, now, onLend, onReturn }: Props) {
 	}
 
 	return (
-		<div className={`${panel.panel} ${classes.panel}`}>
+		<div className={panel.panel}>
 			<div className={panel.head}>
-				<Text className={panel.heading}>本の詳細</Text>
+				<div className={panel.headLeft}>
+					<BookOpen
+						size={ICON_SIZE}
+						strokeWidth={ICON_STROKE}
+						className={panel.headIcon}
+						aria-hidden="true"
+					/>
+					<Text className={panel.heading}>本の詳細</Text>
+				</div>
 				<Link
 					to="/"
 					search={(previous) => ({ status: previous.status })}

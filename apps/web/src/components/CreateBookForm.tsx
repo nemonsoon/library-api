@@ -1,4 +1,4 @@
-import { Button, Paper, Stack, Text, TextInput } from "@mantine/core";
+import { Button, Stack, Text, TextInput } from "@mantine/core";
 import { BookPlus } from "lucide-react";
 import { type FormEvent, useState } from "react";
 import { ICON_SIZE, ICON_STROKE } from "../constants";
@@ -29,9 +29,17 @@ export function CreateBookForm({ onCreate }: Props) {
 	}
 
 	return (
-		<Paper withBorder radius="sm" className={classes.panel}>
+		<div className={classes.panel}>
 			<div className={classes.head}>
-				<Text className={classes.heading}>本を登録する</Text>
+				<div className={classes.headLeft}>
+					<BookPlus
+						size={ICON_SIZE}
+						strokeWidth={ICON_STROKE}
+						className={classes.headIcon}
+						aria-hidden="true"
+					/>
+					<Text className={classes.heading}>本を登録する</Text>
+				</div>
 			</div>
 			<form onSubmit={handleSubmit} className={classes.body}>
 				<Stack gap="sm">
@@ -41,22 +49,12 @@ export function CreateBookForm({ onCreate }: Props) {
 						value={title}
 						onChange={(event) => setTitle(event.currentTarget.value)}
 					/>
-					<Button
-						type="submit"
-						loading={pending}
-						disabled={trimmed === ""}
-						leftSection={
-							<BookPlus
-								size={ICON_SIZE}
-								strokeWidth={ICON_STROKE}
-								aria-hidden="true"
-							/>
-						}
-					>
+					{/* 見出しに同じアイコンが出ているので、押す側には置かない。 */}
+					<Button type="submit" loading={pending} disabled={trimmed === ""}>
 						登録する
 					</Button>
 				</Stack>
 			</form>
-		</Paper>
+		</div>
 	);
 }

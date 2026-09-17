@@ -1,10 +1,11 @@
-import { Paper, Text } from "@mantine/core";
+import { Text } from "@mantine/core";
 import { Link } from "@tanstack/react-router";
 import { BookOpenCheck, CalendarClock } from "lucide-react";
 import { ICON_SIZE, ICON_SIZE_LARGE, ICON_STROKE } from "../constants";
 import { daysOverdue, daysUntilDue, loanElapsedRatio } from "../lib/datetime";
 import type { Book, CurrentLoan } from "../lib/library";
 import classes from "../styles/DueSoon.module.css";
+import panel from "../styles/Panel.module.css";
 
 type Props = {
 	books: Book[];
@@ -35,7 +36,7 @@ function collect(books: Book[], now: Date): DueEntry[] {
 			elapsed: loanElapsedRatio(loan.loanDate, loan.dueDate, now),
 		});
 	}
-	// 期限の近い順に並べる。超過しているものは期限が最も古いので先頭に出る。
+	// 返却期限の近い順に並べる。超過しているものは期限が最も古いので先頭に出る。
 	return entries.sort(
 		(left, right) =>
 			new Date(left.loan.dueDate).getTime() -
@@ -84,15 +85,18 @@ export function DueSoon({ books, now, selectedId }: Props) {
 	const entries = collect(books, now);
 
 	return (
-		<Paper withBorder radius="sm" className={classes.panel}>
-			<div className={classes.head}>
-				<CalendarClock
-					size={ICON_SIZE}
-					strokeWidth={ICON_STROKE}
-					aria-hidden="true"
-				/>
-				<Text className={classes.heading}>返却予定</Text>
-				<Text className={classes.note}>返却期限の近い順</Text>
+		<div className={panel.panel}>
+			<div className={panel.head}>
+				<div className={panel.headLeft}>
+					<CalendarClock
+						size={ICON_SIZE}
+						strokeWidth={ICON_STROKE}
+						className={panel.headIcon}
+						aria-hidden="true"
+					/>
+					<Text className={panel.heading}>返却予定</Text>
+					<Text className={panel.note}>返却期限の近い順</Text>
+				</div>
 			</div>
 			{entries.length === 0 ? (
 				<div className={classes.empty}>
@@ -117,6 +121,6 @@ export function DueSoon({ books, now, selectedId }: Props) {
 					))}
 				</ul>
 			)}
-		</Paper>
+		</div>
 	);
 }

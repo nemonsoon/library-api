@@ -8,8 +8,7 @@
 	--app-font-title:
 		"Zen Old Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif;
 	/* 画面のラベル・ボタン・説明はゴシック。小さい字で読ませる部分を担う。 */
-	--app-font-body:
-		"Zen Kaku Gothic New", "Hiragino Sans", "Yu Gothic UI", sans-serif;
+	--app-font-body: "Noto Sans JP", "Hiragino Sans", "Yu Gothic UI", sans-serif;
 	/* 日数・日付・識別子は等幅。桁が縦にそろい、行をまたいで比べられる。 */
 	--app-font-mono: "IBM Plex Mono", ui-monospace, monospace;
 

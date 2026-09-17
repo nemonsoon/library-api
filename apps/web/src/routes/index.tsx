@@ -6,7 +6,7 @@ import {
 	useNavigate,
 	useRouter,
 } from "@tanstack/react-router";
-import { SearchX, TriangleAlert } from "lucide-react";
+import { LibraryBig, SearchX, TriangleAlert } from "lucide-react";
 import { useEffect } from "react";
 import { AppShell } from "../components/AppShell";
 import { BookDetail } from "../components/BookDetail";
@@ -17,7 +17,7 @@ import { CreateBookForm } from "../components/CreateBookForm";
 import { DueSoon } from "../components/DueSoon";
 import { LibrarySummary } from "../components/LibrarySummary";
 import { StateMessage } from "../components/StateMessage";
-import { ICON_SIZE_LARGE, ICON_STROKE } from "../constants";
+import { ICON_SIZE, ICON_SIZE_LARGE, ICON_STROKE } from "../constants";
 import {
 	type BookFilter as BookFilterValue,
 	countBooks,
@@ -156,7 +156,15 @@ function LibraryPage() {
 		>
 			<div className={panel.panel}>
 				<div className={panel.head}>
-					<Text className={panel.heading}>本の一覧</Text>
+					<div className={panel.headLeft}>
+						<LibraryBig
+							size={ICON_SIZE}
+							strokeWidth={ICON_STROKE}
+							className={panel.headIcon}
+							aria-hidden="true"
+						/>
+						<Text className={panel.heading}>本の一覧</Text>
+					</div>
 					<BookFilter
 						value={filter}
 						counts={counts}

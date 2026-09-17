@@ -1,28 +1,3 @@
-.panel {
-	background-color: var(--mantine-color-white);
-	overflow: hidden;
-}
-
-.head {
-	display: flex;
-	align-items: center;
-	gap: var(--app-icon-gap);
-	padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
-	border-bottom: 1px solid var(--mantine-color-gray-2);
-	color: var(--mantine-color-gray-7);
-}
-
-.heading {
-	font-size: var(--mantine-font-size-sm);
-	font-weight: var(--mantine-font-weight-bold);
-	color: var(--mantine-color-black);
-}
-
-.note {
-	font-size: var(--mantine-font-size-xs);
-	color: var(--mantine-color-gray-6);
-}
-
 .rail {
 	display: flex;
 	gap: var(--mantine-spacing-xs);
