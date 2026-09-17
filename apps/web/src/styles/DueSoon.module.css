@@ -87,9 +87,15 @@
 	line-height: var(--mantine-line-height-sm);
 	display: -webkit-box;
 	-webkit-box-orient: vertical;
-	-webkit-line-clamp: 2;
-	line-clamp: 2;
+	-webkit-line-clamp: var(--app-due-title-lines);
+	line-clamp: var(--app-due-title-lines);
 	overflow: hidden;
+	/* 題名が1行でも2行分の高さを取る。取らないと、隣り合う1枚ごとに下端がずれる。 */
+	min-height: calc(
+		var(--mantine-font-size-md) *
+		var(--mantine-line-height-sm) *
+		var(--app-due-title-lines)
+	);
 }
 
 .borrower {
