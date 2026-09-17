@@ -8,7 +8,7 @@ export function BookListSkeleton() {
 	const rows = Array.from({ length: SKELETON_ROW_COUNT }, (_, index) => index);
 
 	return (
-		<Stack gap="sm" aria-busy="true" aria-label="蔵書を読み込んでいる">
+		<Stack gap="sm" aria-busy="true" aria-label="本の一覧を読み込んでいる">
 			{rows.map((row) => (
 				<Skeleton
 					key={row}

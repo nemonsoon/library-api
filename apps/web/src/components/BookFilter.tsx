@@ -13,6 +13,8 @@ type Props = {
 export function BookFilter({ value, counts, onChange }: Props) {
 	return (
 		<SegmentedControl
+			size="xs"
+			radius="sm"
 			value={value}
 			onChange={(next) => onChange(next as BookFilterValue)}
 			data={[

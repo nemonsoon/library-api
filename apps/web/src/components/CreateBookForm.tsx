@@ -2,6 +2,7 @@ import { Button, Paper, Stack, Text, TextInput } from "@mantine/core";
 import { BookPlus } from "lucide-react";
 import { type FormEvent, useState } from "react";
 import { ICON_SIZE, ICON_STROKE } from "../constants";
+import classes from "../styles/Panel.module.css";
 
 type Props = {
 	onCreate: (title: string) => Promise<boolean>;
@@ -28,15 +29,15 @@ export function CreateBookForm({ onCreate }: Props) {
 	}
 
 	return (
-		<Paper withBorder radius="md" p="md">
-			<form onSubmit={handleSubmit}>
+		<Paper withBorder radius="sm" className={classes.panel}>
+			<div className={classes.head}>
+				<Text className={classes.heading}>本を登録する</Text>
+			</div>
+			<form onSubmit={handleSubmit} className={classes.body}>
 				<Stack gap="sm">
-					<Text fw={600} size="sm">
-						書籍の登録
-					</Text>
 					<TextInput
 						label="題名"
-						placeholder="Clean Architecture"
+						placeholder="銀河鉄道の夜"
 						value={title}
 						onChange={(event) => setTitle(event.currentTarget.value)}
 					/>

@@ -9,6 +9,7 @@ import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { routeTree } from "./routeTree.gen";
+import { theme } from "./theme";
 
 const router = createRouter({ routeTree, defaultPreload: "intent" });
 
@@ -25,7 +26,7 @@ if (container === null) {
 
 createRoot(container).render(
 	<StrictMode>
-		<MantineProvider forceColorScheme="light">
+		<MantineProvider theme={theme} forceColorScheme="light">
 			<Notifications position="bottom-right" />
 			<RouterProvider router={router} />
 		</MantineProvider>

@@ -1,7 +1,7 @@
 {
 	"name": "web",
 	"version": "1.0.0",
-	"description": "蔵書の貸出状況を一覧し、登録と貸出と返却を行うウェブ画面",
+	"description": "本の貸出状況を一覧し、登録と貸出と返却を行うウェブ画面",
 	"license": "MIT",
 	"private": true,
 	"type": "module",

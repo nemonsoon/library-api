@@ -1,0 +1,23 @@
+/* 一覧・返却予定・詳細・登録欄で枠の作りをそろえる。見出しの帯と本文で1枚になる。 */
+.panel {
+	background-color: var(--mantine-color-white);
+	overflow: hidden;
+}
+
+.head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--app-icon-gap);
+	padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
+	border-bottom: 1px solid var(--mantine-color-gray-2);
+}
+
+.heading {
+	font-size: var(--mantine-font-size-sm);
+	font-weight: var(--mantine-font-weight-bold);
+}
+
+.body {
+	padding: var(--mantine-spacing-md);
+}

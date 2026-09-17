@@ -1,6 +1,6 @@
 import type { BookFilter } from "./book-status";
 
-// 選んだ書籍と絞り込みは URL に持たせる。画面を共有したときに同じ状態で開ける。
+// 選んだ本と絞り込みは URL に持たせる。画面を共有したときに同じ状態で開ける。
 export type BookSearch = {
 	status?: BookFilter | undefined;
 	selected?: string | undefined;

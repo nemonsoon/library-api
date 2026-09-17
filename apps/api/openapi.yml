@@ -3,7 +3,7 @@ info:
   title: Library API
   version: 1.0.0
   description: >
-    蔵書管理 API。Express + TypeScript + Prisma で構成。
+    本の貸出を扱う API。Express + TypeScript + Prisma で構成。
     日時はすべて ISO 8601 の協定世界時で返す。
     一覧はローカル実行の規模を前提としており、絞り込みも件数の上限も持たない。
 servers:
@@ -56,10 +56,10 @@ paths:
   /books:
     get:
       tags: [Books]
-      summary: 蔵書一覧
+      summary: 本の一覧
       description: >
-        蔵書を登録日の新しい順に返す。
-        貸出中の書籍には、返却されていない貸出を currentLoan として添える。
+        本を登録日の新しい順に返す。
+        貸出中の本には、返却されていない貸出を currentLoan として添える。
       responses:
         '200':
           description: OK
@@ -73,7 +73,7 @@ paths:
           $ref: '#/components/responses/InternalServerError'
     post:
       tags: [Books]
-      summary: 書籍作成
+      summary: 本の登録
       requestBody:
         required: true
         content:
@@ -95,7 +95,7 @@ paths:
   /books/{id}:
     get:
       tags: [Books]
-      summary: 書籍ID検索
+      summary: 本の取得
       parameters:
         - name: id
           in: path
@@ -117,7 +117,7 @@ paths:
   /loans:
     post:
       tags: [Loans]
-      summary: 書籍貸出
+      summary: 本の貸出
       description: 返却期限は貸出日の14日後に設定される。
       requestBody:
         required: true
@@ -138,7 +138,7 @@ paths:
           $ref: '#/components/responses/NotFound'
         '409':
           description: >
-            業務ルールに反する。書籍が既に貸出中であるか、
+            業務ルールに反する。本が既に貸出中であるか、
             ユーザーの同時貸出が上限の5冊に達している。
           content:
             application/json:
@@ -150,7 +150,7 @@ paths:
   /loans/return:
     post:
       tags: [Loans]
-      summary: 書籍返却
+      summary: 本の返却
       requestBody:
         required: true
         content:
@@ -290,7 +290,7 @@ components:
               allOf:
                 - $ref: '#/components/schemas/CurrentLoan'
               nullable: true
-              description: 返却されていない貸出。貸出可の書籍では null。
+              description: 返却されていない貸出。貸出可の本では null。
 
     CurrentLoan:
       type: object

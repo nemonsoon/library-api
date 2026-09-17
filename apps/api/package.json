@@ -1,7 +1,7 @@
 {
 	"name": "api",
 	"version": "1.0.0",
-	"description": "書籍の登録・貸出・返却を扱う HTTP API",
+	"description": "本の登録・貸出・返却を扱う HTTP API",
 	"license": "MIT",
 	"private": true,
 	"type": "module",

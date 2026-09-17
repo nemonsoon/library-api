@@ -1,0 +1,40 @@
+.summary {
+	display: flex;
+	align-items: baseline;
+	gap: var(--mantine-spacing-lg);
+}
+
+.stat {
+	display: flex;
+	align-items: baseline;
+	gap: var(--app-gap-tight);
+}
+
+.label {
+	font-size: var(--mantine-font-size-xs);
+	color: var(--mantine-color-gray-6);
+}
+
+.value {
+	font-family: var(--app-font-mono);
+	font-size: var(--mantine-font-size-xl);
+	font-weight: var(--mantine-font-weight-medium);
+	font-variant-numeric: tabular-nums;
+	line-height: var(--mantine-line-height-xs);
+}
+
+.plain {
+	color: var(--mantine-color-black);
+}
+
+.quiet {
+	color: var(--mantine-color-gray-5);
+}
+
+.loan {
+	color: var(--mantine-color-ai-6);
+}
+
+.overdue {
+	color: var(--mantine-color-shu-6);
+}

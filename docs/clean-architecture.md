@@ -3,7 +3,7 @@
 ## 概要
 
 この文書では、library-api の4つの層の責務と依存の向きを図解で説明します。
-題材には書籍の登録を使い、1つの要求が層をどう通るかを追います。
+題材には本の登録を使い、1つの要求が層をどう通るかを追います。
 ここで説明する構造は、貸出と返却を含むすべての操作に共通です。
 
 ## アーキテクチャ全体図
@@ -22,7 +22,7 @@ graph TB
     end
 
     subgraph "Application Layer (ユースケース層)"
-        UseCase[AddBookUseCase<br/>書籍追加ロジック]
+        UseCase[AddBookUseCase<br/>本の追加ロジック]
         UseCaseInterface[AddBookUseCaseInterface]
         RequestDTO[AddBookRequestDto]
         ResponseDTO[AddBookResponseDto]
