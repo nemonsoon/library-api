@@ -1,16 +1,36 @@
 /*
- * 画面の骨格だけをここに集める。
- * 色・文字の大きさ・太さ・行間・角丸は Mantine の既定をそのまま使うので置かない。
- * 対応する目盛りが Mantine に無い寸法（トップバーの高さ、詳細列の幅、列の間隔）だけを持つ。
+ * 書体と、Mantine に目盛りが無い寸法だけをここに集める。
+ * 大きさ・太さ・行間・余白・角丸・色は Mantine の変数を使い、ここには置かない。
  * 幅の境目は Mantine の目盛りに合わせる（xs 36em / sm 48em / md 62em / lg 75em / xl 88em）。
  */
 :root {
-	--app-topbar-height: 56px;
-	--app-aside-width: 320px;
-	--app-content-max: 1200px;
-	--app-gutter: 40px;
-	--app-column-gap: 40px;
-	--app-icon-gap: 6px;
+	/* 本の題名だけを明朝で組む。日本の本の題名は明朝で組まれる、という約束事に合わせる。 */
+	--app-font-title:
+		"Zen Old Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif;
+	/* 画面のラベル・ボタン・説明はゴシック。小さい字で読ませる部分を担う。 */
+	--app-font-body: "Noto Sans JP", "Hiragino Sans", "Yu Gothic UI", sans-serif;
+	/* 日数・日付・識別子は等幅。桁が縦にそろい、行をまたいで比べられる。 */
+	--app-font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+	--app-header-height: 72px;
+	--app-aside-width: 340px;
+	--app-content-max: 1240px;
+	--app-gutter: 48px;
+	--app-column-gap: 32px;
+
+	/* Mantine の余白の目盛りは xs が最小で、アイコンや数値の脇には広い。 */
+	--app-gap-hairline: 2px;
+	--app-gap-tight: 6px;
+	--app-icon-gap: 8px;
+
+	/* 返却予定の1枚の幅。題名が2行に収まり、横に5枚前後が並ぶ寸法。 */
+	--app-due-card-width: 176px;
+	/* 返却予定の題名が占める行数。どの1枚も同じ高さになるよう、行数を先に決める。 */
+	--app-due-title-lines: 2;
+	/* 貸出期間の経過を表す帯の高さ。 */
+	--app-due-track-height: 4px;
+	/* 返却予定の1枚の上端に引く線。状態の色をここで見せる。 */
+	--app-due-accent-height: 3px;
 }
 
 @media (max-width: 62em) {
@@ -23,5 +43,6 @@
 @media (max-width: 36em) {
 	:root {
 		--app-gutter: 16px;
+		--app-due-card-width: 152px;
 	}
 }

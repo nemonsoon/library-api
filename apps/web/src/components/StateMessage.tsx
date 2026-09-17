@@ -12,8 +12,8 @@ type Props = {
 export function StateMessage({ icon, title, description, action }: Props) {
 	return (
 		<div className={classes.message}>
-			{icon}
-			<Text fw={600}>{title}</Text>
+			<span className={classes.icon}>{icon}</span>
+			<Text fw={500}>{title}</Text>
 			<Text size="sm" c="dimmed">
 				{description}
 			</Text>

@@ -1,4 +1,4 @@
-import { Group, Paper, Stack, Title } from "@mantine/core";
+import { Stack, Text } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import {
 	createFileRoute,
@@ -6,7 +6,7 @@ import {
 	useNavigate,
 	useRouter,
 } from "@tanstack/react-router";
-import { CircleAlert, Inbox } from "lucide-react";
+import { LibraryBig, SearchX, TriangleAlert } from "lucide-react";
 import { useEffect } from "react";
 import { AppShell } from "../components/AppShell";
 import { BookDetail } from "../components/BookDetail";
@@ -14,9 +14,10 @@ import { BookFilter } from "../components/BookFilter";
 import { BookList } from "../components/BookList";
 import { BookListSkeleton } from "../components/BookListSkeleton";
 import { CreateBookForm } from "../components/CreateBookForm";
-import { Overview } from "../components/Overview";
+import { DueSoon } from "../components/DueSoon";
+import { LibrarySummary } from "../components/LibrarySummary";
 import { StateMessage } from "../components/StateMessage";
-import { ICON_STROKE } from "../constants";
+import { ICON_SIZE, ICON_SIZE_LARGE, ICON_STROKE } from "../constants";
 import {
 	type BookFilter as BookFilterValue,
 	countBooks,
@@ -32,10 +33,11 @@ import {
 	returnLoan,
 } from "../lib/library";
 import { parseBookSearch } from "../lib/search";
+import panel from "../styles/Panel.module.css";
 
 export const Route = createFileRoute("/")({
 	validateSearch: parseBookSearch,
-	// 選んだ書籍は読み込みの依存に入れない。入れると選ぶたびに一覧の再取得が走る。
+	// 選んだ本は読み込みの依存に入れない。入れると選ぶたびに一覧の再取得が走る。
 	loader: async () => {
 		const [books, users] = await Promise.all([fetchBooks(), fetchUsers()]);
 		return { books, users };
@@ -58,15 +60,19 @@ function LoadingPage() {
 function ErrorPage({ error }: { error: unknown }) {
 	const router = useRouter();
 	const description =
-		error instanceof ApiError ? error.message : "蔵書を読み込めなかった。";
+		error instanceof ApiError ? error.message : "本の一覧を読み込めなかった。";
 
 	return (
 		<AppShell aside={null}>
 			<StateMessage
 				icon={
-					<CircleAlert size={32} strokeWidth={ICON_STROKE} aria-hidden="true" />
+					<TriangleAlert
+						size={ICON_SIZE_LARGE}
+						strokeWidth={ICON_STROKE}
+						aria-hidden="true"
+					/>
 				}
-				title="蔵書を読み込めない"
+				title="本の一覧を読み込めない"
 				description={description}
 				action={{
 					label: "読み込み直す",
@@ -91,7 +97,7 @@ function LibraryPage() {
 	);
 	const selected = books.find((book) => book.id === search.selected);
 
-	// 絞り込みで消えた書籍や、一覧に無い識別子が指されたままにならないようにする。
+	// 絞り込みで消えた本や、一覧に無い識別子が指されたままにならないようにする。
 	useEffect(() => {
 		if (search.selected !== undefined && selected === undefined) {
 			void navigate({
@@ -108,11 +114,11 @@ function LibraryPage() {
 		try {
 			await action();
 			await router.invalidate();
-			notifications.show({ color: "teal", message: success });
+			notifications.show({ color: "midori", message: success });
 			return true;
 		} catch (error) {
 			notifications.show({
-				color: "red",
+				color: "shu",
 				title: "処理できなかった",
 				message:
 					error instanceof ApiError
@@ -125,14 +131,11 @@ function LibraryPage() {
 
 	const aside =
 		selected === undefined ? (
-			<Stack gap="md">
-				<Overview counts={counts} />
-				<CreateBookForm
-					onCreate={(title) =>
-						run(() => createBook(title), `「${title}」を登録した。`)
-					}
-				/>
-			</Stack>
+			<CreateBookForm
+				onCreate={(title) =>
+					run(() => createBook(title), `「${title}」を登録した。`)
+				}
+			/>
 		) : (
 			<BookDetail
 				book={selected}
@@ -141,15 +144,27 @@ function LibraryPage() {
 				onLend={(bookId, userId) =>
 					run(() => createLoan(bookId, userId), "貸し出した。")
 				}
-				onReturn={(loanId) => run(() => returnLoan(loanId), "返却した。")}
+				onReturn={(loanId) => run(() => returnLoan(loanId), "返してもらった。")}
 			/>
 		);
 
 	return (
-		<AppShell aside={aside}>
-			<Stack gap="md">
-				<Group justify="space-between" align="center">
-					<Title order={2}>蔵書</Title>
+		<AppShell
+			summary={<LibrarySummary counts={counts} />}
+			banner={<DueSoon books={books} now={now} selectedId={search.selected} />}
+			aside={aside}
+		>
+			<div className={panel.panel}>
+				<div className={panel.head}>
+					<div className={panel.headLeft}>
+						<LibraryBig
+							size={ICON_SIZE}
+							strokeWidth={ICON_STROKE}
+							className={panel.headIcon}
+							aria-hidden="true"
+						/>
+						<Text className={panel.heading}>本の一覧</Text>
+					</div>
 					<BookFilter
 						value={filter}
 						counts={counts}
@@ -157,21 +172,25 @@ function LibraryPage() {
 							void navigate({ search: next === "all" ? {} : { status: next } })
 						}
 					/>
-				</Group>
-				<Paper withBorder radius="md" p="xs">
-					{visible.length === 0 ? (
-						<StateMessage
-							icon={
-								<Inbox size={32} strokeWidth={ICON_STROKE} aria-hidden="true" />
-							}
-							title="該当する書籍がない"
-							description="絞り込みを変えるか、右の窓口から書籍を登録する。"
-						/>
-					) : (
+				</div>
+				{visible.length === 0 ? (
+					<StateMessage
+						icon={
+							<SearchX
+								size={ICON_SIZE_LARGE}
+								strokeWidth={ICON_STROKE}
+								aria-hidden="true"
+							/>
+						}
+						title="条件に合う本がない"
+						description="絞り込みを変えるか、右の欄から本を登録する。"
+					/>
+				) : (
+					<Stack gap={0}>
 						<BookList books={visible} now={now} selectedId={search.selected} />
-					)}
-				</Paper>
-			</Stack>
+					</Stack>
+				)}
+			</div>
 		</AppShell>
 	);
 }

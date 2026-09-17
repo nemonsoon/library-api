@@ -1,7 +1,7 @@
 {
 	"name": "library-api",
 	"version": "1.0.0",
-	"description": "書籍の登録・貸出・返却を扱う HTTP API と、その蔵書を一覧するウェブ画面",
+	"description": "本の登録・貸出・返却を扱う HTTP API と、貸出状況を一覧するウェブ画面",
 	"license": "MIT",
 	"private": true,
 	"type": "module",
@@ -20,6 +20,6 @@
 		"db:seed": "npm run db:seed --workspace api"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.4.2"
+		"@biomejs/biome": "2.5.14"
 	}
 }

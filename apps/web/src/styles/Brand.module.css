@@ -2,10 +2,25 @@
 	display: flex;
 	align-items: center;
 	gap: var(--app-icon-gap);
+	color: var(--mantine-color-ai-6);
+}
+
+.name {
+	font-size: var(--mantine-font-size-md);
+	font-weight: var(--mantine-font-weight-bold);
+	line-height: var(--mantine-line-height-xs);
+	color: var(--mantine-color-black);
+}
+
+.tagline {
+	font-size: var(--mantine-font-size-xs);
+	line-height: var(--mantine-line-height-xs);
+	color: var(--mantine-color-gray-6);
 }
 
 .repositoryLink {
 	display: inline-flex;
 	align-items: center;
 	gap: var(--app-icon-gap);
+	color: var(--mantine-color-gray-6);
 }

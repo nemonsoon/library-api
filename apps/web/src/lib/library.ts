@@ -104,7 +104,7 @@ function postJson(body: unknown): RequestInit {
 export async function fetchBooks(): Promise<Book[]> {
 	const body = await call("/books");
 	if (!Array.isArray(body) || !body.every(isBook)) {
-		throw new ApiError(0, "蔵書の一覧を解釈できない形で受け取った。");
+		throw new ApiError(0, "本の一覧を解釈できない形で受け取った。");
 	}
 	return body;
 }

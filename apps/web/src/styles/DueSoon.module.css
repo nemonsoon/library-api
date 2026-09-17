@@ -1,0 +1,118 @@
+.rail {
+	display: flex;
+	gap: var(--mantine-spacing-xs);
+	margin: 0;
+	padding: var(--mantine-spacing-md);
+	list-style: none;
+	overflow-x: auto;
+	scroll-snap-type: x proximity;
+}
+
+.rail > li {
+	flex: none;
+	scroll-snap-align: start;
+}
+
+.card {
+	display: flex;
+	flex-direction: column;
+	gap: var(--app-gap-tight);
+	width: var(--app-due-card-width);
+	padding: var(--mantine-spacing-sm);
+	border: 1px solid var(--mantine-color-gray-2);
+	border-radius: var(--mantine-radius-sm);
+	color: inherit;
+	text-decoration: none;
+	transition: border-color 120ms ease;
+}
+
+.card:hover {
+	border-color: var(--mantine-color-gray-4);
+}
+
+/* 超過しているものだけ、上端の線を朱にして帯の先頭で目に入るようにする。 */
+.cardOverdue {
+	border-top: var(--app-due-accent-height) solid var(--mantine-color-shu-6);
+}
+
+.cardOnLoan {
+	border-top: var(--app-due-accent-height) solid var(--mantine-color-ai-3);
+}
+
+.cardSelected {
+	border-color: var(--mantine-color-ai-4);
+	background-color: var(--mantine-color-ai-0);
+}
+
+.days {
+	font-family: var(--app-font-mono);
+	font-size: var(--mantine-h2-font-size);
+	font-weight: var(--mantine-font-weight-medium);
+	font-variant-numeric: tabular-nums;
+	line-height: var(--mantine-line-height-xs);
+	color: var(--mantine-color-ai-6);
+}
+
+.daysOverdue {
+	color: var(--mantine-color-shu-6);
+}
+
+.unit {
+	margin-left: var(--app-gap-hairline);
+	font-family: var(--app-font-body);
+	font-size: var(--mantine-font-size-xs);
+	font-weight: var(--mantine-font-weight-regular);
+}
+
+.track {
+	height: var(--app-due-track-height);
+	border-radius: var(--app-due-track-height);
+	background-color: var(--mantine-color-gray-2);
+	overflow: hidden;
+}
+
+.fill {
+	height: 100%;
+	background-color: var(--mantine-color-ai-5);
+}
+
+.fillOverdue {
+	height: 100%;
+	background-color: var(--mantine-color-shu-6);
+}
+
+.title {
+	font-family: var(--app-font-title);
+	font-size: var(--mantine-font-size-md);
+	line-height: var(--mantine-line-height-sm);
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: var(--app-due-title-lines);
+	line-clamp: var(--app-due-title-lines);
+	overflow: hidden;
+	/* 題名が1行でも2行分の高さを取る。取らないと、隣り合う1枚ごとに下端がずれる。 */
+	min-height: calc(
+		var(--mantine-font-size-md) *
+		var(--mantine-line-height-sm) *
+		var(--app-due-title-lines)
+	);
+}
+
+.borrower {
+	font-family: var(--app-font-mono);
+	font-size: var(--mantine-font-size-xs);
+	color: var(--mantine-color-gray-6);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.empty {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: var(--app-gap-hairline);
+	padding: var(--mantine-spacing-lg) var(--mantine-spacing-md);
+	text-align: center;
+	color: var(--mantine-color-gray-6);
+}

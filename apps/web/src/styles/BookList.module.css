@@ -1,5 +1,19 @@
+.table thead th {
+	font-size: var(--mantine-font-size-xs);
+	font-weight: var(--mantine-font-weight-medium);
+	color: var(--mantine-color-gray-6);
+}
+
+.row:hover {
+	background-color: var(--mantine-color-gray-0);
+}
+
+.selectedRow {
+	background-color: var(--mantine-color-ai-0);
+}
+
 .titleCell {
-	max-width: 22rem;
+	max-width: 24rem;
 }
 
 .statusCell {
@@ -7,15 +21,49 @@
 	white-space: nowrap;
 }
 
-.selectedRow {
-	background-color: var(--mantine-color-blue-0);
-}
-
 .rowLink {
+	font-family: var(--app-font-title);
+	font-size: var(--mantine-font-size-md);
+	line-height: var(--mantine-line-height-sm);
 	color: inherit;
 	text-decoration: none;
 }
 
 .rowLink:hover {
 	text-decoration: underline;
+}
+
+.borrower {
+	font-family: var(--app-font-mono);
+	font-size: var(--mantine-font-size-xs);
+}
+
+.due {
+	display: flex;
+	flex-direction: column;
+	gap: var(--app-gap-hairline);
+}
+
+.dueDate,
+.registered {
+	font-family: var(--app-font-mono);
+	font-size: var(--mantine-font-size-xs);
+	font-variant-numeric: tabular-nums;
+	white-space: nowrap;
+}
+
+.remaining {
+	font-size: var(--mantine-font-size-xs);
+	color: var(--mantine-color-gray-6);
+	white-space: nowrap;
+}
+
+.overdue {
+	color: var(--mantine-color-shu-6);
+	font-weight: var(--mantine-font-weight-medium);
+}
+
+.blank {
+	font-size: var(--mantine-font-size-xs);
+	color: var(--mantine-color-gray-4);
 }
