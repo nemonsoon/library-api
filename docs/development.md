@@ -6,10 +6,10 @@
 
 リポジトリ直下は npm のワークスペースで、配下に2つのパッケージがある。
 
-| パッケージ | 場所 | 中身 |
-| --- | --- | --- |
-| `api` | `apps/api` | HTTP API、Prisma のスキーマ、OpenAPI の仕様、テスト |
-| `web` | `apps/web` | ウェブ画面 |
+| パッケージ | 場所       | 中身                                                |
+| ---------- | ---------- | --------------------------------------------------- |
+| `api`      | `apps/api` | HTTP API、Prisma のスキーマ、OpenAPI の仕様、テスト |
+| `web`      | `apps/web` | ウェブ画面                                          |
 
 直下から `npm run test` `npm run typecheck` `npm run check` を実行すると、両方のパッケージに対して走る。
 個別に動かすときは `npm run <スクリプト名> --workspace api` のように指定する。
@@ -71,10 +71,10 @@ npm run db:seed    # 初期データを投入する（既存のデータは消�
 
 `apps/api/.env.example` をコピーして `apps/api/.env` を作る。
 
-| 変数 | 用途 | 例 |
-| --- | --- | --- |
-| `DATABASE_URL` | SQLite の接続先 | `file:./dev.db` |
-| `PORT` | API の待ち受けポート | `3000` |
+| 変数           | 用途                 | 例              |
+| -------------- | -------------------- | --------------- |
+| `DATABASE_URL` | SQLite の接続先      | `file:./dev.db` |
+| `PORT`         | API の待ち受けポート | `3000`          |
 
 `PORT` を変えたときは、`apps/web/vite.config.ts` の転送先も合わせて変える。
 

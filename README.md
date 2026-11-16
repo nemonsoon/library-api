@@ -10,15 +10,15 @@
 画面は1枚で、上段が返却予定、その下が左に本の一覧、右に詳細の列という構成になっている。
 返却予定は貸出中の本を返却期限の近い順に並べ、期限までの日数と貸出期間の進み具合を出す。
 
-| 操作 | 画面 | API |
-| --- | --- | --- |
-| 本の登録 | ○ | `POST /books` |
-| 本の貸出 | ○ | `POST /loans` |
-| 本の返却 | ○ | `POST /loans/return` |
-| 本の一覧 | ○ | `GET /books` |
-| 本の取得 | | `GET /books/:id` |
-| ユーザーの一覧 | | `GET /users` |
-| ユーザーの作成 | | `POST /users` |
+| 操作           | 画面 | API                  |
+| -------------- | ---- | -------------------- |
+| 本の登録       | ○    | `POST /books`        |
+| 本の貸出       | ○    | `POST /loans`        |
+| 本の返却       | ○    | `POST /loans/return` |
+| 本の一覧       | ○    | `GET /books`         |
+| 本の取得       |      | `GET /books/:id`     |
+| ユーザーの一覧 |      | `GET /users`         |
+| ユーザーの作成 |      | `POST /users`        |
 
 画面に出ている値の意味は [画面](docs/screen.md) にある。
 
@@ -68,22 +68,22 @@ erDiagram
 
 ## 技術スタック
 
-| 分類 | 技術 |
-| --- | --- |
-| 言語 | TypeScript 7（ESM） |
-| 実行環境 | Node.js 24（`mise.toml` で固定） |
-| パッケージ管理 | npm ワークスペース |
-| Web フレームワーク | Express 5.2 |
-| ORM | Prisma 7.10 |
-| データベース | SQLite（`better-sqlite3` 12.6） |
-| 入力検証 | Zod 4.6 |
-| API 仕様 | OpenAPI 3.0.3 |
-| 画面 | React 19.3、Vite 8.3、TanStack Router 1.170 |
-| 画面の部品 | Mantine 9.6、Lucide 1.46 |
-| 書体 | Zen Old Mincho、Noto Sans JP、IBM Plex Mono |
-| 初期データ | Faker 10.6 |
-| テスト | Vitest 5.0 |
-| 静的検査 | Biome 2.5 |
+| 分類               | 技術                                        |
+| ------------------ | ------------------------------------------- |
+| 言語               | TypeScript 7（ESM）                         |
+| 実行環境           | Node.js 24（`mise.toml` で固定）            |
+| パッケージ管理     | npm ワークスペース                          |
+| Web フレームワーク | Express 5.2                                 |
+| ORM                | Prisma 7.10                                 |
+| データベース       | SQLite（`better-sqlite3` 12.6）             |
+| 入力検証           | Zod 4.6                                     |
+| API 仕様           | OpenAPI 3.0.3                               |
+| 画面               | React 19.3、Vite 8.3、TanStack Router 1.170 |
+| 画面の部品         | Mantine 9.6、Lucide 1.46                    |
+| 書体               | Zen Old Mincho、Noto Sans JP、IBM Plex Mono |
+| 初期データ         | Faker 10.6                                  |
+| テスト             | Vitest 5.0                                  |
+| 静的検査           | Biome 2.5                                   |
 
 ## セットアップ
 
@@ -113,10 +113,10 @@ npm run dev:web    # http://localhost:5173
 
 起動中の API が、仕様を2つの形で配信する。
 
-| URL | 内容 |
-| --- | --- |
-| `http://localhost:3000/docs` | Swagger UI。各エンドポイントをブラウザ上で試せる |
-| `http://localhost:3000/openapi.yml` | OpenAPI 仕様そのもの |
+| URL                                 | 内容                                             |
+| ----------------------------------- | ------------------------------------------------ |
+| `http://localhost:3000/docs`        | Swagger UI。各エンドポイントをブラウザ上で試せる |
+| `http://localhost:3000/openapi.yml` | OpenAPI 仕様そのもの                             |
 
 仕様の原本は [`apps/api/openapi.yml`](apps/api/openapi.yml)。
 
@@ -125,21 +125,21 @@ npm run dev:web    # http://localhost:5173
 ローカル実行を想定しており、本番環境への配備は行っていない。
 以下は未実装で、[Issues](https://github.com/nemonsoon/library-api/issues) で管理している。
 
-| 未実装のもの | 影響 |
-| --- | --- |
-| 認証と認可 | 任意のユーザーの識別子を指定すれば、誰でも貸出と返却ができる |
+| 未実装のもの | 影響                                                         |
+| ------------ | ------------------------------------------------------------ |
+| 認証と認可   | 任意のユーザーの識別子を指定すれば、誰でも貸出と返却ができる |
 
 一覧を返す2つのエンドポイントは、本とユーザーの全件をそのまま返す。
 ページングも絞り込みの引数も持たない。
 
 ## ドキュメント
 
-| 文書 | いつ読むか |
-| --- | --- |
-| [画面](docs/screen.md) | 画面に出ている値の意味を確かめるとき |
-| [アーキテクチャ](docs/clean-architecture.md) | 層の責務と依存の向きを確かめるとき |
-| [設計判断](docs/design-decisions.md) | 「なぜそうなっていないか」を知りたいとき |
-| [開発](docs/development.md) | 手元で動かし、変更を検査するとき |
+| 文書                                         | いつ読むか                               |
+| -------------------------------------------- | ---------------------------------------- |
+| [画面](docs/screen.md)                       | 画面に出ている値の意味を確かめるとき     |
+| [アーキテクチャ](docs/clean-architecture.md) | 層の責務と依存の向きを確かめるとき       |
+| [設計判断](docs/design-decisions.md)         | 「なぜそうなっていないか」を知りたいとき |
+| [開発](docs/development.md)                  | 手元で動かし、変更を検査するとき         |
 
 ## ライセンス
 

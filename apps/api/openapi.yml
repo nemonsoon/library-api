@@ -22,16 +22,16 @@ paths:
       summary: ユーザー一覧
       description: 登録済みのユーザーを作成日の古い順に返す。
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/User'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+                  $ref: "#/components/schemas/User"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
     post:
       tags: [Users]
       summary: ユーザー作成
@@ -40,18 +40,18 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateUserRequest'
+              $ref: "#/components/schemas/CreateUserRequest"
       responses:
-        '201':
+        "201":
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+                $ref: "#/components/schemas/User"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
   /books:
     get:
@@ -61,16 +61,16 @@ paths:
         本を登録日の新しい順に返す。
         貸出中の本には、返却されていない貸出を currentLoan として添える。
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/BookWithLoan'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+                  $ref: "#/components/schemas/BookWithLoan"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
     post:
       tags: [Books]
       summary: 本の登録
@@ -79,18 +79,18 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateBookRequest'
+              $ref: "#/components/schemas/CreateBookRequest"
       responses:
-        '201':
+        "201":
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Book'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+                $ref: "#/components/schemas/Book"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
   /books/{id}:
     get:
@@ -103,16 +103,16 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Book'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+                $ref: "#/components/schemas/Book"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
   /loans:
     post:
@@ -124,28 +124,28 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateLoanRequest'
+              $ref: "#/components/schemas/CreateLoanRequest"
       responses:
-        '201':
+        "201":
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Loan'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '409':
+                $ref: "#/components/schemas/Loan"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
           description: >
             業務ルールに反する。本が既に貸出中であるか、
             ユーザーの同時貸出が上限の5冊に達している。
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
   /loans/return:
     post:
@@ -156,26 +156,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ReturnLoanRequest'
+              $ref: "#/components/schemas/ReturnLoanRequest"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ReturnLoanResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '409':
+                $ref: "#/components/schemas/ReturnLoanResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
           description: 業務ルールに反する。貸出が既に返却されている。
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
 components:
   responses:
@@ -184,21 +184,21 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ErrorResponse'
+            $ref: "#/components/schemas/ErrorResponse"
 
     NotFound:
       description: 指定された対象が存在しない。
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ErrorResponse'
+            $ref: "#/components/schemas/ErrorResponse"
 
     InternalServerError:
       description: 想定していない例外。
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ErrorResponse'
+            $ref: "#/components/schemas/ErrorResponse"
 
   schemas:
     ErrorResponse:
@@ -282,13 +282,13 @@ components:
 
     BookWithLoan:
       allOf:
-        - $ref: '#/components/schemas/Book'
+        - $ref: "#/components/schemas/Book"
         - type: object
           required: [currentLoan]
           properties:
             currentLoan:
               allOf:
-                - $ref: '#/components/schemas/CurrentLoan'
+                - $ref: "#/components/schemas/CurrentLoan"
               nullable: true
               description: 返却されていない貸出。貸出可の本では null。
 

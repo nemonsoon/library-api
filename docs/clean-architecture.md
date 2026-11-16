@@ -388,10 +388,10 @@ graph TB
 
 ```typescript
 export class AddBookUseCase {
-  constructor(
-    private readonly bookRepository: BookRepositoryInterface, // インターフェース
-    private readonly idGenerator: IdGeneratorInterface, // インターフェース
-  ) {}
+	constructor(
+		private readonly bookRepository: BookRepositoryInterface, // インターフェース
+		private readonly idGenerator: IdGeneratorInterface, // インターフェース
+	) {}
 }
 ```
 
